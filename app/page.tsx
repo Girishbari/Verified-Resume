@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import Confetti from "react-confetti";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
 import {
   Page,
@@ -191,101 +192,106 @@ export default function MultiStepReclaimVerification() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <Alert
-        variant="default"
-        className="my-2 border-green-400 font-bold tracking-wide"
-      >
-        <InfoCircledIcon className="h-6 w-5" />
-        <AlertTitle className="text-xl tracking-wider">Attention</AlertTitle>
-        <AlertDescription className="">
-          If provider is not able to extract the data, then scan the QR AGAIN to
-          Re-start the process
-        </AlertDescription>
-      </Alert>
-      <Card className="mb-4">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold">{currentProvider.name}</h3>
-            <p className="text-sm text-gray-500">
-              {currentProvider.description}
-            </p>
-          </div>
-          <Badge
-            variant={verified === "verified" ? "default" : "secondary"}
-            className="ml-2"
-          >
-            {verified}
-          </Badge>
-        </CardHeader>
-        <CardContent>
-          {verified === "none" ? (
-            <Button onClick={handleVerify} className="w-full">
-              Start Verification
-            </Button>
-          ) : verified === "verifying" ? (
-            <div className="flex items-center justify-center">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              <span className="ml-2">Verifying...</span>
-              <Button
-                className="mx-1"
-                variant={"destructive"}
-                onClick={() => {
-                  setVerified("none");
-                  setQR("");
-                }}
-              >
-                Cancel{" "}
-              </Button>
+    <BackgroundBeamsWithCollision>
+      {" "}
+      <div className="max-w-3xl mx-auto p-6 z-20">
+        <Alert
+          variant="default"
+          className="my-2 border-green-400 font-bold tracking-wide"
+        >
+          <InfoCircledIcon className="h-6 w-5" />
+          <AlertTitle className="text-xl font-bold">Attention</AlertTitle>
+          <AlertDescription className="">
+            If provider is not able to extract the data, then scan the QR AGAIN
+            to Re-start the process
+          </AlertDescription>
+        </Alert>
+        <Card className="mb-4">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">{currentProvider.name}</h3>
+              <p className="text-sm text-gray-500">
+                {currentProvider.description}
+              </p>
             </div>
-          ) : verified === "verified" ? (
-            <div className="bg-gray-50 p-4 rounded">
-              <pre className="text-sm overflow-auto">Verified</pre>
-            </div>
-          ) : (
-            <div className="text-red-500">
-              {`Error: "Some un-expected error has occured"`}
-            </div>
-          )}
-        </CardContent>
-
-        <CardContent className="">
-          <div className="flex justify-center ">
-            {qr && <Qrcode value={qr} />}
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button onClick={handlePrevious} disabled={currentStep === 0}>
-            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-          </Button>
-          <Button
-            onClick={handleNext}
-            disabled={currentStep === providerKeys.length - 1}
-          >
-            Next <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        </CardFooter>
-      </Card>
-
-      {Object.keys(status).length === Object.keys(PROVIDERS).length && (
-        <Card className="mt-8">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">Generated Verified Resume</h2>
+            <Badge
+              variant={verified === "verified" ? "default" : "secondary"}
+              className="ml-2"
+            >
+              {verified}
+            </Badge>
           </CardHeader>
           <CardContent>
-            <Button
-              className="bg-green-300 font-semibold"
-              onClick={handleButtonClick}
-              disabled={loading}
-              variant={"outline"}
-            >
-              {loading ? "Preparing PDF..." : "Download Resume"}
-            </Button>
+            {verified === "none" ? (
+              <Button onClick={handleVerify} className="w-full">
+                Start Verification
+              </Button>
+            ) : verified === "verifying" ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span className="ml-2">Verifying...</span>
+                <Button
+                  className="mx-1"
+                  variant={"destructive"}
+                  onClick={() => {
+                    setVerified("none");
+                    setQR("");
+                  }}
+                >
+                  Cancel{" "}
+                </Button>
+              </div>
+            ) : verified === "verified" ? (
+              <div className="bg-gray-50 p-4 rounded">
+                <pre className="text-sm overflow-auto">Verified</pre>
+              </div>
+            ) : (
+              <div className="text-red-500">
+                {`Error: "Some un-expected error has occured"`}
+              </div>
+            )}
           </CardContent>
+
+          <CardContent className="">
+            <div className="flex justify-center ">
+              {qr && <Qrcode value={qr} />}
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button onClick={handlePrevious} disabled={currentStep === 0}>
+              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+            </Button>
+            <Button
+              onClick={handleNext}
+              disabled={currentStep === providerKeys.length - 1}
+            >
+              Next <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </CardFooter>
         </Card>
-      )}
-      {showConfetti && <Confetti />}
-    </div>
+
+        {Object.keys(status).length === Object.keys(PROVIDERS).length && (
+          <Card className="mt-8">
+            <CardHeader>
+              <h2 className="text-xl font-semibold">
+                Generated Verified Resume
+              </h2>
+            </CardHeader>
+            <CardContent>
+              <Button
+                className="font-semibold"
+                onClick={handleButtonClick}
+                disabled={loading}
+                variant={"secondary"}
+              >
+                {loading ? "Preparing PDF..." : "Download Resume"}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+        {showConfetti && <Confetti />}
+      </div>
+    </BackgroundBeamsWithCollision>
   );
 }
 
