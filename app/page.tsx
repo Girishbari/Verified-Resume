@@ -15,6 +15,8 @@ import Qrcode from "react-qr-code";
 import { useLocalStorage } from "@/components/useLocalStorage";
 import { toast } from "sonner";
 import Confetti from "react-confetti";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import {
   Page,
@@ -190,6 +192,17 @@ export default function MultiStepReclaimVerification() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
+      <Alert
+        variant="default"
+        className="my-2 border-green-400 font-bold tracking-wide"
+      >
+        <InfoCircledIcon className="h-6 w-5" />
+        <AlertTitle className="text-xl tracking-wider">Attention</AlertTitle>
+        <AlertDescription className="">
+          If provider is not able to extract the data, then scan the QR AGAIN to
+          Re-start the process
+        </AlertDescription>
+      </Alert>
       <Card className="mb-4">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
